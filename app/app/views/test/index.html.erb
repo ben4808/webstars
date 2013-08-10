@@ -1,0 +1,45 @@
+<script>
+var radius, map_width, map_height;
+
+function test_xy() {
+  alert("hi2");
+  radius = 40;
+  map_width = 960;
+  map_height = 540;
+  get_xy(12 * 15, 70, 11 * 15, 60);
+}
+
+get_xy = function(ra, dec, center_ra, center_dec) {
+    var R, ra_diff, x, y, z;
+    ra = deg_to_rad(ra);
+    dec = deg_to_rad(dec);
+    center_ra = deg_to_rad(center_ra);
+    center_dec = deg_to_rad(center_dec);
+    ra_diff = center_ra - ra;
+    if (ra_diff <= -Math.PI) {
+      ra_diff += 2*Math.PI;
+    }
+    if (ra_diff > Math.PI) {
+      ra_diff -= 2*Math.PI;
+    }
+    nd = Math.PI / 2
+    x = Math.sin(ra_diff) * (nd - dec);
+    z = Math.cos(ra_diff) * (nd - dec);
+    y = nd - center_dec - z;
+    R = 1;
+    x = R * (x * map_width + map_width / 2) * 9 / 16.0;
+    x = Math.round(x * 10) / 10;
+    y = R * y * map_height + map_height / 2;
+    y = Math.round(y * 10) / 10;
+    return [x, y];
+  };
+
+  deg_to_rad = function(deg) {
+    return deg * Math.PI / 180.0;
+  };
+</script>
+
+<form>
+<input type='button' value='Run Test' onclick='alert("hi");test_xy();'>
+<p>Done.</p>
+</form>

@@ -1,0 +1,72 @@
+// Place all the styles related to the map controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+
+// SVG styles
+.star {
+  stroke: black;
+  stroke-width: 1;
+  fill: black;
+}
+
+.white_star {
+  stroke: white;
+  stroke-width: 1;
+  fill: white;
+}
+
+.line {
+  stroke: black;
+  stroke-width: 1;
+  fill: none;
+}
+
+.label {
+  font-family: Verdana;
+  font-size: 6;
+  fill: black;
+}
+
+.galaxy {
+  stroke: black;
+  stroke-width: 1;
+  fill: red;
+}
+
+.open_cluster {
+  stroke: black;
+  stroke-width: 1;
+  stroke-dasharray: 10, 10;
+  fill: yellow;
+}
+
+.globular_cluster {
+  stroke: black;
+  stroke-width: 1;
+  fill: yellow;
+}
+
+.bright_nebula {
+  stroke: black;
+  stroke-width: 1;
+  fill: green;
+}
+
+.plan_nebula {
+  stroke: black;
+  stroke-width: 1;
+  fill: green;
+}
+
+// CSS styles
+#map_div {
+  width: 1920px;
+  height: 1200px;
+  background-color: white;
+}
+
+#star_map {
+  width: 100%;
+  height: 100%;
+}
+

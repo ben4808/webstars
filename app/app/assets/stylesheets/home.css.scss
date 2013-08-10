@@ -1,0 +1,46 @@
+// Place all the styles related to the Home controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+
+// CSS styles
+body {
+   background-color: #cccccc;
+   font-family: Verdana;
+   font-size: 12px;
+   margin: 0;
+   padding: 0;
+}
+
+.bigheader {
+   color: black;
+   font-size: 25px;
+   font-weight: bold;
+}
+
+.midheader {
+  color: black;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.maincol {
+   width: 960px;
+   margin: 0 auto;
+   background-color: white;
+
+   -moz-box-shadow: 0 0 5px 5px #888;
+   -webkit-box-shadow: 0 0 5px 5px #888;
+   box-shadow: 0 0 5px 5px #888;
+}
+
+.optionsbox {
+  background-color: #dddddd;
+  border: 1px #888888 dashed;
+  margin: 5px;
+  font-weight:bold;
+}
+
+#map_options, #star_options, #dso_options {
+  float: left;
+}
+

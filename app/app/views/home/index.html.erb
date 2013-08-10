@@ -1,0 +1,60 @@
+<div class="maincol">
+
+  <div class="bigheader" width="100%" style="text-align:center">Custom Star Map</div>
+
+  <br>
+
+  <form id="options_form" method="post" action="/map">
+
+  <div class="optionsbox" id="map_options">
+    <div class="midheader">Map Options</div>
+
+    <p>RA:</br>
+       <%= text_field_tag 'ra_h_1', '11', size: 2, maxlength: 2 %> h <%= text_field_tag 'ra_m_1', '0', size: 2, maxlength: 2 %> m
+  -to- <%= text_field_tag 'ra_h_2', '13', size: 2, maxlength: 2 %> h <%= text_field_tag 'ra_m_2', '0', size: 2, maxlength: 2 %> m |
+  Grid <%= text_field_tag 'ra_grid', '60', size: 2, maxlength: 2 %> m</p>
+
+    <p>Dec:</br>
+       <%= text_field_tag 'dec_deg_1', '50', size: 3, maxlength: 3 %> deg -to- <%= text_field_tag 'dec_deg_2', '70', size: 3, maxlength: 3 %> deg |
+  Grid <%= text_field_tag 'dec_grid', '10', size: 2, maxlength: 3 %> deg</p>
+
+    <p>Map Title: <%= text_field_tag 'title', 'My Map' %></p>
+    <p>Text Size (px): <%= text_field_tag 'text_size', '8', size: 3, maxlength: 3 %></p>
+  </div>
+
+  <div class="optionsbox" id="star_options">
+    <div class="midheader">Star Options</div>
+    <p>Max Mag: <%= text_field_tag 'max_mag', '6.5', size: 4, maxlength: 4 %></p>
+    <p>Smallest Star Radius (px): <%= text_field_tag 'small_rad', '1', size: 3, maxlength: 3 %></p>
+    <p>Mag Scale (px/mag): <%= text_field_tag 'scale', '1', size: 3, maxlength: 3 %></p>
+    <p>Labels:<br>
+      <%= check_box_tag 'prop_names', nil, true %> Proper Names <%= check_box_tag 'uncommon' %> Uncommon<br>
+      <%= check_box_tag 'bayer_names' %> Bayer Names<br>
+      <%= check_box_tag 'flam_names' %> Flamsteed Nums<br>
+      <%= check_box_tag 'gould_names' %> Gould Nums<br>
+      <%= check_box_tag 'hip' %> HIP Nums to mag <%= text_field_tag 'hip_mag', nil, size: 4, maxlength: 4 %><br>
+      <%= check_box_tag 'hd' %> HD Nums to mag <%= text_field_tag 'hd_mag', nil, size: 4, maxlength: 4 %><br>
+      <%= check_box_tag 'tyc' %> Tycho-2 Nums to mag <%= text_field_tag 'tyc_mag', nil, size: 4, maxlength: 4 %><br>
+    </p>
+  </div>
+
+  <div class="optionsbox" id="dso_options">
+    <div class="midheader">Deep Space Object Options</div>
+    <p><%= check_box_tag 'gx' %> Galaxies<br>
+      Max Mag <%= text_field_tag 'gx_mag', '12.5', size: 4, maxlength: 4 %>
+      Max Size (m) <%= text_field_tag 'gx_size', '20', size: 4, maxlength: 4 %></p>
+    <p><%= check_box_tag 'oc' %> Open Clusters<br>
+      Max Mag <%= text_field_tag 'oc_mag', '10', size: 4, maxlength: 4 %>
+      Max Size <%= text_field_tag 'oc_size', '60', size: 4, maxlength: 4 %></p>
+    <p><%= check_box_tag 'gc' %> Globular Clusters<br>
+      Max Mag <%= text_field_tag 'gc_mag', '12', size: 4, maxlength: 4 %></p>
+    <p><%= check_box_tag 'bn' %> Bright Nebulae<br>
+      Max Size <%= text_field_tag 'bn_size', '100', size: 4, maxlength: 4 %></p>
+    <p><%= check_box_tag 'pn' %> Planetary Nebulae<br>
+      Max Mag <%= text_field_tag 'pn_mag', '13', size: 4, maxlength: 4 %></p>
+  </div>
+
+  <div width="100%" style="text-align:center;clear:left;margin:10;"><input type="submit" value="Generate!"></div>
+
+  </form>
+</div>
