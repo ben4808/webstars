@@ -23,7 +23,6 @@
 
 .label {
   font-family: Verdana;
-  font-size: 6;
   fill: black;
 }
 
@@ -56,6 +55,12 @@
   stroke: black;
   stroke-width: 1;
   fill: green;
+}
+
+.title {
+  font-family: Verdana;
+  font-size: 24;
+  fill: black;
 }
 
 // CSS styles

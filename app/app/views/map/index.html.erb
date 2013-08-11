@@ -1,14 +1,11 @@
 <script>
   $(window).load(function() {
-    data = <%= raw(@data.to_json) %>;
-    data_obj = $.parseJSON(data);
-    $('#main_map').html(data_obj.hip_stars[0].name);
-    generate_map(data_obj, 'main_map');
+    var data_obj = $.parseJSON(<%= raw(@data.to_json) %>);
+    var params = $.parseJSON(<%= raw(@params.to_json) %>);
+    generate_map(data_obj, '#map_div', params);
   });
 </script>
 
 <div id="map_div">
-  <div id="main_map">
 
-  </div>
 </div>

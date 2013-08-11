@@ -9,6 +9,7 @@ class MapController < ApplicationController
     dec_deg_1 = params[:dec_deg_1].to_i.to_s
     dec_deg_2 = params[:dec_deg_2].to_i.to_s
     dec_grid = params[:dec_gird].to_i.to_s
+    @params = params.to_json.to_s
     
     # stars
     max_mag = params[:max_mag].to_f.round(2).to_s
@@ -52,7 +53,7 @@ class MapController < ApplicationController
       querys << "(obj_type_id=4 and mag <= " + pn_mag + ")" if pn
       dso_query += querys.join(" or ") + ")"
 
-      dsos = NgcicDso.where(dso_query)
+      dsos = NgcicDso.where(dso_query).order("size_maj desc")
     end
     
     json = "{\n"
