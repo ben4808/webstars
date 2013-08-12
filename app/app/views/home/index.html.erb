@@ -24,33 +24,34 @@
 
   <div class="optionsbox" id="star_options">
     <div class="midheader">Star Options</div>
-    <p>Max Mag: <%= text_field_tag 'max_mag', '6.5', size: 4, maxlength: 4 %></p>
-    <p>Smallest Star Radius (px): <%= text_field_tag 'small_rad', '1', size: 3, maxlength: 3 %></p>
-    <p>Mag Scale (px/mag): <%= text_field_tag 'scale', '1', size: 3, maxlength: 3 %></p>
+    <p>Max Mag: <%= text_field_tag 'max_mag', '8.5', size: 4, maxlength: 4 %></p>
+    <p>Smallest Star Radius (px): <%= text_field_tag 'small_rad', '0.2', size: 3, maxlength: 3 %></p>
+    <p>Mag Scale (px/mag): <%= text_field_tag 'scale', '0.7', size: 3, maxlength: 3 %></p>
     <p>Labels:<br>
       <%= check_box_tag 'prop_names', nil, true %> Proper Names <%= check_box_tag 'uncommon' %> Uncommon<br>
-      <%= check_box_tag 'bayer_names' %> Bayer Names<br>
-      <%= check_box_tag 'flam_names' %> Flamsteed Nums<br>
+      <%= check_box_tag 'var_names', nil, true %> Variable Names<br>
+      <%= check_box_tag 'bayer_names', nil, true  %> Bayer Names<br>
+      <%= check_box_tag 'flam_names', nil, true  %> Flamsteed Nums<br>
       <%= check_box_tag 'gould_names' %> Gould Nums<br>
-      <%= check_box_tag 'hip' %> HIP Nums to mag <%= text_field_tag 'hip_mag', nil, size: 4, maxlength: 4 %><br>
-      <%= check_box_tag 'hd' %> HD Nums to mag <%= text_field_tag 'hd_mag', nil, size: 4, maxlength: 4 %><br>
-      <%= check_box_tag 'tyc' %> Tycho-2 Nums to mag <%= text_field_tag 'tyc_mag', nil, size: 4, maxlength: 4 %><br>
+      <%= check_box_tag 'hip' %> HIP Nums to mag <%= text_field_tag 'hip_mag', '8', size: 4, maxlength: 4 %><br>
+      <%= check_box_tag 'hd' %> HD Nums to mag <%= text_field_tag 'hd_mag', '10', size: 4, maxlength: 4 %><br>
+      <%= check_box_tag 'tyc' %> Tycho-2 Nums to mag <%= text_field_tag 'tyc_mag', '12', size: 4, maxlength: 4 %><br>
     </p>
   </div>
 
   <div class="optionsbox" id="dso_options">
     <div class="midheader">Deep Space Object Options</div>
-    <p><%= check_box_tag 'gx' %> Galaxies<br>
-      Max Mag <%= text_field_tag 'gx_mag', '12.5', size: 4, maxlength: 4 %>
-      Max Size (m) <%= text_field_tag 'gx_size', '20', size: 4, maxlength: 4 %></p>
-    <p><%= check_box_tag 'oc' %> Open Clusters<br>
+    <p><%= check_box_tag 'gx', nil, true %> Galaxies<br>
+      Max Mag <%= text_field_tag 'gx_mag', '11.5', size: 4, maxlength: 4 %>
+      Max Size (m) <%= text_field_tag 'gx_size', '200', size: 4, maxlength: 4 %></p>
+    <p><%= check_box_tag 'oc', nil, true %> Open Clusters<br>
       Max Mag <%= text_field_tag 'oc_mag', '10', size: 4, maxlength: 4 %>
       Max Size <%= text_field_tag 'oc_size', '60', size: 4, maxlength: 4 %></p>
-    <p><%= check_box_tag 'gc' %> Globular Clusters<br>
+    <p><%= check_box_tag 'gc', nil, true %> Globular Clusters<br>
       Max Mag <%= text_field_tag 'gc_mag', '12', size: 4, maxlength: 4 %></p>
-    <p><%= check_box_tag 'bn' %> Bright Nebulae<br>
-      Max Size <%= text_field_tag 'bn_size', '100', size: 4, maxlength: 4 %></p>
-    <p><%= check_box_tag 'pn' %> Planetary Nebulae<br>
+    <p><%= check_box_tag 'bn', nil, true %> Bright Nebulae<br>
+      Max Size <%= text_field_tag 'bn_size', '1000', size: 4, maxlength: 4 %></p>
+    <p><%= check_box_tag 'pn', nil, true %> Planetary Nebulae<br>
       Max Mag <%= text_field_tag 'pn_mag', '13', size: 4, maxlength: 4 %></p>
   </div>
 

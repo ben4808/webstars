@@ -20,6 +20,20 @@ star_scale = 0
 map_width = 0
 map_height = 0
 map_title = ""
+map_text_size = 0
+
+proper_names = false
+var_labels = false
+uncommon = false
+bayer = false
+flamsteed = false
+gould = false
+hip_labels = false
+hip_mag = 0
+hd_labels = false
+hd_mag = 0
+tyc_labels = false
+tyc_mag = 0
 
 pix_per_min = 0
 
@@ -39,14 +53,14 @@ window.generate_map = (data_obj, div_id, params) ->
   return
 
 update_globals = (params) ->
-  ra_1 = Math.round((parseInt(params.ra_h_1) + parseInt(params.ra_m_1)/60.0) * 15)
-  ra_2 = Math.round((parseInt(params.ra_h_2) + parseInt(params.ra_m_1)/60.0) * 15)
-  center_ra = (ra_2 + ra_1) / 2
+  ra_1 = Math.round((parseInt(params.ra_h_1) + parseInt(params.ra_m_1)/60.0) * 150) / 10
+  ra_2 = Math.round((parseInt(params.ra_h_2) + parseInt(params.ra_m_2)/60.0) * 150) / 10
+  center_ra = Math.round((ra_2 + ra_1) / 2.0 * 100) / 100
   ra_grid = parseInt(params.ra_grid) / 4
 
   dec_1 = parseInt(params.dec_deg_1)
   dec_2 = parseInt(params.dec_deg_2)
-  center_dec = (dec_2 + dec_1) / 2
+  center_dec = Math.round((dec_2 + dec_1) / 2.0 * 10) / 10
   center_dec = 1 if (center_dec < 1 and center_dec >= 0)
   center_dec = -1 if (center_dec > -1 and center_dec < 0)
   dec_grid = parseInt(params.dec_grid)
@@ -58,6 +72,20 @@ update_globals = (params) ->
   map_width = 1870
   map_height = 1000
   map_title = params.title
+  map_text_size = parseInt(params.text_size)
+
+  proper_names = 'prop_names' of params
+  uncommon = 'uncommon' of params
+  var_labels = 'var_names' of params
+  bayer = 'bayer_names' of params
+  flamsteed = 'flam_names' of params
+  gould = 'gould_names' of params
+  hip_labels = 'hip' of params
+  hip_mag = parseFloat(params.hip_mag) if !!params.hip_mag.replace(/^\s+|\s+$/g, "")
+  hd_labels = 'hd' of params
+  hd_mag = parseFloat(params.hd_mag) if !!params.hd_mag.replace(/^\s+|\s+$/g, "")
+  tyc_labels = 'tyc' of params
+  tyc_mag = parseFloat(params.tyc_mag) if !!params.tyc_mag.replace(/^\s+|\s+$/g, "")
 
   # conic equidistant projection, single standard parallel
   sp = deg_to_rad(center_dec)
@@ -99,55 +127,56 @@ generate_html = (obj) ->
   html.push(generate_dec_line deg) for deg in [dec_1..dec_2] by dec_grid
 
   html.push(generate_dso dso) for dso in obj.dsos
-  html.push(generate_hip_star star) for star in obj.hip_stars
-  html.push(generate_tyc_star star) for star in obj.tyc_stars
+  html.push(generate_star star) for star in obj.hip_stars
+  html.push(generate_star star) for star in obj.tyc_stars
 
   "<svg id='star_map' xmlns='http://www.w3.org/2000/svg' version='1.1'>" + html.join(" ") + "</svg>"
   
 generate_frame = ->
-  #border_rect = "<rect class='line' x='25' y='85' width='" + map_width.toString() + "' height='" + (map_height + 20).toString() + "' />"
-  title = "<text class='title' x='50' y='75'>" + map_title + "</text>"
+  title = "<text class='title' font-size='24' x='50' y='50'>" + map_title + "</text>"
   mag = Math.round(star_max_mag)
   mags = []
   mags.push("<circle class ='star' cx='#{1005+i*25}' cy='60' r='#{star_min_rad + 6 - i * star_scale}' /><text class='label' x='#{1000+i*25}' y='40'>#{mag - (6 - i)}</text>") for i in [0..6]
   title + mags.join(" ")
 
-generate_hip_star = (star) ->
+generate_star = (star) ->
   [x, y] = get_xy(star.ra_deg, star.dec_deg)
   r = star_min_rad + (star_max_mag - star.mag) * star_scale
   r = Math.round(r*100)/100
-  "<circle class='white_star' cx='#{x}' cy='#{y}' r='#{r+0.5}' /> <circle class='star' cx='#{x}' cy='#{y}' r='#{r}' />"
-  #"<circle class='star' cx='#{x}' cy='#{y}' r='#{r}' />"
-
-generate_tyc_star = (star) ->
-  [x, y] = get_xy(star.ra_deg, star.dec_deg)
-  r = star_min_rad + (star_max_mag - star.mag) * star_scale
-  r = Math.round(r*100)/100
-  #"<circle class='white_star' cx='#{x}' cy='#{y}' r='#{r+0.5}' /> <circle class='star' cx='#{x}' cy='#{y}' r='#{r}' />"
-  "<circle class='star' cx='#{x}' cy='#{y}' r='#{r}' />"
+  label = star_label(star)
+  ret = "<circle class='white_star' cx='#{x}' cy='#{y}' r='#{r+0.5}' /> <circle class='star' cx='#{x}' cy='#{y}' r='#{r}' />"
+  ret += "<text class='label' font-size='#{map_text_size}' x='#{x+r}' y='#{y-r}'>#{label}</text>" if label != ""
+  ret
 
 generate_dso = (dso) ->
   [x, y] = get_xy(dso.ra_deg, dso.dec_deg)
+  ret = ""
+  r = 0
   switch dso.obj_type_id
     when 1
-      #"<ellipse class='galaxy' cx='#{x}' cy='#{y}' rx='#{r}' ry = '#{r2}' transform='rotate(#{dso.pa})' />"
       r_maj = Math.max(5, Math.round(dso.size_maj * pix_per_min / 2.0, 1))
       r_min = Math.max(3, Math.round(dso.size_min * pix_per_min / 2.0, 1))
-      "<ellipse class='galaxy' cx='#{x}' cy='#{y}' rx='#{r_maj}' ry = '#{r_min}' transform='rotate(#{dso.pa}, #{x}, #{y})' />"
+      r = r_maj
+      ret = "<ellipse class='galaxy' cx='#{x}' cy='#{y}' rx='#{r_maj}' ry = '#{r_min}' transform='rotate(#{dso.pa}, #{x}, #{y})' />"
     when 5
-      r = 3
-      "<circle class='open_cluster' cx='#{x}' cy='#{y}' r='#{r}' />"
+      r = Math.max(5, Math.round(dso.size_maj * pix_per_min / 2.0, 1))
+      ret = "<circle class='open_cluster' cx='#{x}' cy='#{y}' r='#{r}' />"
     when 6
-      r = 3
-      "<circle class='globular_cluster' cx='#{x}' cy='#{y}' r='#{r}' /> <line class='line' x1='#{x-r}' y1='#{y}' x2='#{x+r}' y2='#{y}' /> <line class='line' x1='#{x}' y1='#{y-r}' x2='#{x}' y2='#{y+r}' />"
+      r = Math.max(5, Math.round(dso.size_maj * pix_per_min / 2.0, 1))
+      ret = "<circle class='globular_cluster' cx='#{x}' cy='#{y}' r='#{r}' /> <line class='line' x1='#{x-r}' y1='#{y}' x2='#{x+r}' y2='#{y}' /> <line class='line' x1='#{x}' y1='#{y-r}' x2='#{x}' y2='#{y+r}' />"
     when 2
-      s = 6
+      s = Math.max(5, Math.round(dso.size_maj * pix_per_min, 1))
       s2 = s/2
-      "<rect class='bright_nebula' x='#{x-s2}' y='#{y-s2}' width='#{s}' height='#{s}' />"
+      r = s2
+      ret = "<rect class='bright_nebula' x='#{x-s2}' y='#{y-s2}' width='#{s}' height='#{s}' />"
     when 4
-      r = 4
+      r = Math.max(7, Math.round(dso.size_maj * pix_per_min / 2.0, 1))
       r2 = r/2 # not sure why I had to create this; weird bug
-      "<line class='line' x1='#{x-r}' y1='#{y}' x2='#{x+r}' y2='#{y}' /> <line class='line' x1='#{x}' y1='#{y-r}' x2='#{x}' y2='#{y+r}' /> <circle class='plan_nebula' cx='#{x}' cy='#{y}' r='#{r2}' />"
+      ret = "<line class='line' x1='#{x-r}' y1='#{y}' x2='#{x+r}' y2='#{y}' /> <line class='line' x1='#{x}' y1='#{y-r}' x2='#{x}' y2='#{y+r}' /> <circle class='plan_nebula' cx='#{x}' cy='#{y}' r='#{r2}' />"
+    
+  label = dso_label(dso)
+  ret += "<text class='dso_label' font-size='#{map_text_size}'  x='#{x+r}' y='#{y-r}'>#{label}</text>" if label != ""
+  ret
 
 generate_dec_line = (deg) ->
   i = ra_1
@@ -157,6 +186,7 @@ generate_dec_line = (deg) ->
     [x, y] = get_xy(i, deg)
     i += 1
     "#{x},#{y}"
+  lines.push "#{lx},#{ly}"
   all_lines = lines.join(" ")
   "<text class='label' x='#{lx-30}' y='#{ly}'>#{dec_to_label_text(deg)}</text><polyline class='line' points='#{all_lines}' /><text class='label' x='#{fx+5}' y='#{fy}'>#{dec_to_label_text(deg)}</text>"
 
@@ -168,6 +198,7 @@ generate_ra_line = (deg) ->
     [x, y] = get_xy(deg, i)
     i += 1
     "#{x},#{y}"
+  lines.push "#{lx},#{ly}"
   all_lines = lines.join(" ")
   "<text class='label' x='#{fx}' y='#{fy+15}'>#{ra_to_label_text(deg)}</text><polyline class='line' points='#{all_lines}' /><text class='label' x='#{lx}' y='#{ly-5}'>#{ra_to_label_text(deg)}</text>"
 
@@ -203,11 +234,10 @@ deg_to_rad = (deg) ->
 ra_to_label_text = (ra) ->
   ra /= 15.0
   hours = Math.floor(ra)
-  min = Math.floor((ra - hours) * 60)
+  min = Math.round((ra - hours) * 60)
   ret = "#{hours}h"
   ret += "#{min}m" if min != 0
   ret
-
 
 dec_to_label_text = (dec) ->
   deg = Math.floor(dec)
@@ -216,3 +246,38 @@ dec_to_label_text = (dec) ->
   sign = "-" if deg < 0
   "#{sign}#{deg}"
 
+star_label = (star) ->
+  if 'tyc1' of star and tyc_labels and star.mag <= tyc_mag
+    if(hd_labels and star.hd != null and star.mag <= hd_mag)
+      return "HD #{star.hd}"
+    else
+      return "TYC #{star.tyc1} #{star.tyc2} #{star.tyc3}"
+  else if 'tyc1' of star
+    return ""
+
+  label = ""
+  if hd_labels and star.hd != null and star.mag <= hd_mag
+    label = "HD #{star.hd}"
+  if hip_labels and star.hip != null and star.mag <= hip_mag
+    label = "HIP #{star.hip}"
+  if gould and star.gould != null
+    label = "#{star.gould}G."
+  if flamsteed and star.flam != null
+    label = "#{star.flam}"
+  if bayer and star.bayer != null
+    label = "#{star.bayer}"
+  if var_labels and star.var_name != null
+    label = "#{star.var_name}"
+  if proper_names and star.name != null and (uncommon or star.is_common)
+    label = "#{star.name}"
+  label
+
+dso_label = (dso) ->
+  label = ""
+  if dso.ic != null
+    label = "IC #{dso.ic}"
+  if dso.ngc != null
+    label = "#{dso.ngc}"
+  if dso.mess != null
+    label = "M#{dso.mess}"
+  label

@@ -26,6 +26,12 @@
   fill: black;
 }
 
+.dso_label {
+  font-family: Verdana;
+  fill: black;
+  font-style: italic;
+}
+
 .galaxy {
   stroke: black;
   stroke-width: 1;
@@ -35,7 +41,7 @@
 .open_cluster {
   stroke: black;
   stroke-width: 1;
-  stroke-dasharray: 10, 10;
+  stroke-dasharray: 2, 2;
   fill: yellow;
 }
 
@@ -59,7 +65,6 @@
 
 .title {
   font-family: Verdana;
-  font-size: 24;
   fill: black;
 }
 
