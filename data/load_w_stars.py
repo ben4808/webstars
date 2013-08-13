@@ -15,7 +15,7 @@ results = cur.fetchall()
 for res in results:
    cons_ids[res[0]] = res[1]
 
-input = codecs.open("w_stars_v2.csv", "r", "utf-8")
+input = codecs.open("data/w_stars_v2.csv", "r", "utf-8")
 
 # discard header
 input.readline()

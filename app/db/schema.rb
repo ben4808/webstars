@@ -76,7 +76,7 @@ ActiveRecord::Schema.define(version: 20130813015633) do
     t.decimal "mag",         precision: 4,  scale: 2
   end
 
-  create_table "stars", force: true do |t|
+  create_table "tyc_stars", force: true do |t|
     t.integer "hd"
     t.integer "tyc1"
     t.integer "tyc2"

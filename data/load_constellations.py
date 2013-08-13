@@ -8,7 +8,7 @@ cur.execute("delete from constellations")
 cur.execute("alter table constellations auto_increment = 1")
 
 # repopulate table
-file = open("constellations.csv", "r")
+file = open("data/constellations.csv", "r")
 file.readline() # discard header
 
 query = "insert into constellations (name, abbr) values "

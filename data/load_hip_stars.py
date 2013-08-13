@@ -7,7 +7,7 @@ cur = db.cursor()
 # Not resetting table since it is assumed the Wikipedia stars (mag <= 6.5) are already loaded
 # Also, no constellations will be loaded with these stars.
 
-input = open("hip_stars.csv", "r")
+input = open("data/hip_stars.csv", "r")
 
 # discard header
 input.readline()

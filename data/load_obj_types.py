@@ -8,7 +8,7 @@ cur.execute("delete from obj_types")
 cur.execute("alter table obj_types auto_increment = 1")
 
 # repopulate table
-file = open("objtypes.csv", "r")
+file = open("data/objtypes.csv", "r")
 file.readline() # discard header
 
 query = "insert into obj_types (name, abbr) values "

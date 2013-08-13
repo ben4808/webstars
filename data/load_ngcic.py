@@ -15,7 +15,7 @@ for res in results:
 cur.execute("delete from ngcic_dsos")
 cur.execute("alter table ngcic_dsos auto_increment = 1")
 
-input = open("NI2012.csv", "r")
+input = open("data/NI2012.csv", "r")
 
 input.readline() # discard header
 
