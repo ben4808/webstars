@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20130723010703) do
+ActiveRecord::Schema.define(version: 20130813015633) do
 
   create_table "constellations", force: true do |t|
     t.string "name"
@@ -70,6 +70,9 @@ ActiveRecord::Schema.define(version: 20130723010703) do
     t.integer "obj_type_id"
     t.decimal "ra_deg",      precision: 11, scale: 8
     t.decimal "dec_deg",     precision: 10, scale: 8
+    t.decimal "size_maj",    precision: 6,  scale: 2
+    t.decimal "size_min",    precision: 6,  scale: 2
+    t.integer "pa"
     t.decimal "mag",         precision: 4,  scale: 2
   end
 
@@ -78,6 +81,12 @@ ActiveRecord::Schema.define(version: 20130723010703) do
     t.integer "tyc1"
     t.integer "tyc2"
     t.integer "tyc3"
+    t.decimal "ra_deg",  precision: 11, scale: 8
+    t.decimal "dec_deg", precision: 10, scale: 8
+    t.decimal "mag",     precision: 4,  scale: 2
+  end
+
+  create_table "ucac_stars", force: true do |t|
     t.decimal "ra_deg",  precision: 11, scale: 8
     t.decimal "dec_deg", precision: 10, scale: 8
     t.decimal "mag",     precision: 4,  scale: 2
