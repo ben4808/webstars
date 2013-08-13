@@ -3,6 +3,7 @@
     var data_obj = $.parseJSON(<%= raw(@data.to_json) %>);
     var params = $.parseJSON(<%= raw(@params.to_json) %>);
     generate_map(data_obj, '#map_div', params);
+    //$("#map_div").html(<%= raw(@data.to_json) %>);
   });
 </script>
 

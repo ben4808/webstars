@@ -30,7 +30,9 @@ class MapController < ApplicationController
     
     hip_stars = HipStar.where("ra_deg >= " + ra_deg_1 + " and ra_deg <= " + ra_deg_2 +
       " and dec_deg >= " + dec_deg_1 + " and dec_deg <= " + dec_deg_2 + " and mag <= " + max_mag).order("mag")
-    tyc_stars = Star.where("ra_deg >= " + ra_deg_1 + " and ra_deg <= " + ra_deg_2 +
+    tyc_stars = TycStar.where("ra_deg >= " + ra_deg_1 + " and ra_deg <= " + ra_deg_2 +
+      " and dec_deg >= " + dec_deg_1 + " and dec_deg <= " + dec_deg_2 + " and mag <= " + max_mag).order("mag")
+    ucac_stars = UcacStar.where("ra_deg >= " + ra_deg_1 + " and ra_deg <= " + ra_deg_2 +
       " and dec_deg >= " + dec_deg_1 + " and dec_deg <= " + dec_deg_2 + " and mag <= " + max_mag).order("mag")
 
     dso_query = ""
@@ -41,7 +43,8 @@ class MapController < ApplicationController
     excl << 2 if not bn
     excl << 4 if not pn
 
-    dsos = []
+    ngcic_dsos = []
+    other_dsos = []
     if excl.length < 5
       dso_query += "obj_type_id not in (" + excl.join(",") + ") and " if excl.length > 0
       dso_query += "ra_deg >= " + ra_deg_1 + " and ra_deg <= " + ra_deg_2 + " and dec_deg >= " + dec_deg_1 + " and dec_deg <= " + dec_deg_2 + " and ("
@@ -53,13 +56,16 @@ class MapController < ApplicationController
       querys << "(obj_type_id=4 and mag <= " + pn_mag + ")" if pn
       dso_query += querys.join(" or ") + ")"
 
-      dsos = NgcicDso.where(dso_query).order("size_maj desc")
+      ngcic_dsos = NgcicDso.where(dso_query).order("size_maj desc")
+      other_dsos = OtherDso.where(dso_query).order("size_maj desc")
     end
     
     json = "{\n"
     json += "\"hip_stars\": [" + hip_stars.map{|res| res.to_json}.join(", ") + "],\n"
     json += "\"tyc_stars\": [" + tyc_stars.map{|res| res.to_json}.join(", ") + "],\n"
-    json += "\"dsos\": [" + dsos.map{|res| res.to_json}.join(", ") + "]\n"
+    json += "\"ucac_stars\": [" + ucac_stars.map{|res| res.to_json}.join(", ") + "],\n"
+    json += "\"ngcic_dsos\": [" + ngcic_dsos.map{|res| res.to_json}.join(", ") + "],\n"
+    json += "\"other_dsos\": [" + other_dsos.map{|res| res.to_json}.join(", ") + "]\n"
     json += "}"
     @data = json
   end

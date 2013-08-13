@@ -26,7 +26,7 @@ while(True):
     break
 
   tokens = line.split(",")
-  mag = float(tokens[6])
+  mag = float(tokens[2])
   if(mag <= 6.5):
     continue
   

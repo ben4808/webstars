@@ -1,7 +1,9 @@
 #! /bin/sh
 
-echo 'constellations'
+echo 'Constellations'
 python load_constellations.py > /dev/null 2>&1
+echo 'Object Types'
+python load_obj_types.py > /dev/null 2>&1
 echo 'wikipedia stars'
 python load_w_stars.py > /dev/null 2>&1
 echo 'HIP stars'

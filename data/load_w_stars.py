@@ -25,6 +25,11 @@ records_per_query = 100
 while(True):
   line = input.readline().strip()
   if(len(line) == 0):
+    if(len(query) > 0):
+      query = query[:-2]
+      #print query
+      #break
+      cur.execute(query)
     break
 
   if(record_id % records_per_query == 0):

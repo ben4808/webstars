@@ -126,9 +126,11 @@ generate_html = (obj) ->
   html.push(generate_dec_line dec_2)
   html.push(generate_dec_line deg) for deg in [dec_1..dec_2] by dec_grid
 
-  html.push(generate_dso dso) for dso in obj.dsos
+  html.push(generate_dso dso) for dso in obj.ngcic_dsos
+  html.push(generate_dso dso) for dso in obj.other_dsos
   html.push(generate_star star) for star in obj.hip_stars
   html.push(generate_star star) for star in obj.tyc_stars
+  html.push(generate_star star) for star in obj.ucac_stars
 
   "<svg id='star_map' xmlns='http://www.w3.org/2000/svg' version='1.1'>" + html.join(" ") + "</svg>"
   
@@ -157,6 +159,7 @@ generate_dso = (dso) ->
       r_maj = Math.max(5, Math.round(dso.size_maj * pix_per_min / 2.0, 1))
       r_min = Math.max(3, Math.round(dso.size_min * pix_per_min / 2.0, 1))
       r = r_maj
+      r_min = r_maj if(dso.size_min == null)
       ret = "<ellipse class='galaxy' cx='#{x}' cy='#{y}' rx='#{r_maj}' ry = '#{r_min}' transform='rotate(#{dso.pa}, #{x}, #{y})' />"
     when 5
       r = Math.max(5, Math.round(dso.size_maj * pix_per_min / 2.0, 1))
@@ -247,6 +250,8 @@ dec_to_label_text = (dec) ->
   "#{sign}#{deg}"
 
 star_label = (star) ->
+  return "" if (not ('tyc1' of star) and not ('hip' of star))
+
   if 'tyc1' of star and tyc_labels and star.mag <= tyc_mag
     if(hd_labels and star.hd != null and star.mag <= hd_mag)
       return "HD #{star.hd}"
@@ -274,10 +279,13 @@ star_label = (star) ->
 
 dso_label = (dso) ->
   label = ""
-  if dso.ic != null
-    label = "IC #{dso.ic}"
-  if dso.ngc != null
-    label = "#{dso.ngc}"
-  if dso.mess != null
-    label = "M#{dso.mess}"
+  if 'ngc' of dso
+    if dso.ic != null
+      label = "IC #{dso.ic}"
+    if dso.ngc != null
+      label = "#{dso.ngc}"
+    if dso.mess != null
+      label = "M#{dso.mess}"
+  else
+    label = "#{dso.name}"
   label
