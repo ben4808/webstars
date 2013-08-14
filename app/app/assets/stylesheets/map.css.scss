@@ -57,6 +57,13 @@
   fill: green;
 }
 
+.dark_nebula {
+  stroke: black;
+  stroke-dasharray: 2, 2;
+  stroke-width: 1;
+  fill: gray;
+}
+
 .plan_nebula {
   stroke: black;
   stroke-width: 1;
@@ -78,5 +85,25 @@
 #star_map {
   width: 100%;
   height: 100%;
+}
+
+table { 
+   border-spacing:0;
+   border-collapse:collapse;
+}
+
+#data_table {
+  border: 0;
+  
+  th {
+    text-align: center;
+    padding: 5px;
+    background-color: #999;
+  }
+  td {
+    text-align: center;
+    padding: 3px 10px;
+    background-color: white;
+  }
 }
 

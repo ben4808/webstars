@@ -1,5 +1,6 @@
 import utility
 import exceptions
+import codecs
 
 db = utility.get_db_conn()
 cur = db.cursor()
@@ -103,6 +104,59 @@ while(True):
     #break
     cur.execute(query)
 
+input = open("data/objects.csv", "r")
+input.readline() # discard header
+
+while(True):
+  line = input.readline().strip()
+  if(len(line) == 0):
+      break
+  tokens = line.split(",")
+  for i in range(9, len(tokens)):
+    tokens[8] += "," + tokens[i]
+  if(len(tokens[8]) > 0 and tokens[8][0] == '"'):
+    tokens[8] = tokens[8][1:len(tokens[8])-1]
+    tokens[8] = tokens[8].replace('""', "sec")
+    tokens[8] = tokens[8].replace("'", "min")
+  if(len(tokens[6]) > 0 and tokens[6][0] == '"'):
+    tokens[6] = tokens[6][1:len(tokens[6])-1]
+    tokens[6] = tokens[6].replace('""', "")
+  
+  ngc = ""
+  ic = ""
+  if(len(tokens[1]) > 0):
+    ngc_tok = tokens[1].split()
+    if(len(ngc_tok) == 1):
+      ngc = ngc_tok[0]
+    else:
+      ic = ngc_tok[1]
+  if(len(ngc) == 0 and len(ic) == 0):
+    continue
+
+  name = ""
+  desc = ""
+  if(len(tokens[6]) > 0):
+    name = tokens[6]
+  if(len(tokens[8]) > 0):
+    desc = tokens[8]
+  if(len(name) == 0 and len(desc) == 0):
+    continue
+  
+  query = "update ngcic_dsos set "
+  if(len(name) > 0):
+    query += "name=\"" + name + "\" "
+  if(len(desc) > 0):
+    if(len(name) > 0):
+      query += ", "
+    query += "description=\"" + desc + "\" "
+  if(len(ngc) > 0):
+    query += "where ngc=\"" + ngc + "\""
+  if(len(ic) > 0):
+    query += "where ic=\"" + ic + "\""
+
+  #print query
+  cur.execute(query)
+   
 db.commit()
 cur.close()
 input.close()

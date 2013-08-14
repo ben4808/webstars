@@ -60,6 +60,7 @@ update_globals = (params) ->
 
   dec_1 = parseInt(params.dec_deg_1)
   dec_2 = parseInt(params.dec_deg_2)
+  [dec_2, dec_1] = [dec_1, dec_2] if dec_1 > dec_2
   center_dec = Math.round((dec_2 + dec_1) / 2.0 * 10) / 10
   center_dec = 1 if (center_dec < 1 and center_dec >= 0)
   center_dec = -1 if (center_dec > -1 and center_dec < 0)
@@ -172,6 +173,11 @@ generate_dso = (dso) ->
       s2 = s/2
       r = s2
       ret = "<rect class='bright_nebula' x='#{x-s2}' y='#{y-s2}' width='#{s}' height='#{s}' />"
+    when 3
+      s = Math.max(5, Math.round(dso.size_maj * pix_per_min, 1))
+      s2 = s/2
+      r = s2
+      ret = "<rect class='dark_nebula' x='#{x-s2}' y='#{y-s2}' width='#{s}' height='#{s}' />"
     when 4
       r = Math.max(7, Math.round(dso.size_maj * pix_per_min / 2.0, 1))
       r2 = r/2 # not sure why I had to create this; weird bug
@@ -289,3 +295,64 @@ dso_label = (dso) ->
   else
     label = "#{dso.name}"
   label
+
+window.generate_table = (obj, div_id) ->
+  html = []
+  html.push(generate_dso_row dso) for dso in obj.ngcic_dsos
+  html.push(generate_dso_row dso) for dso in obj.other_dsos
+
+  $(div_id).append(html.join(" "))
+
+generate_dso_row = (dso) ->
+  obj_types = ['', 'Gx', 'BN', 'DN', 'PN', 'OC', 'GC']
+
+  ret = "<tr>"
+  if 'ngc' of dso
+    name = "NGC #{dso.ngc}" if dso.ngc != null
+    name = "IC #{dso.ic}" if dso.ic != null
+    name = "M#{dso.mess}" if dso.mess != null
+    ret += "<td>#{name}</td>"
+    ret += "<td>#{obj_types[dso.obj_type_id]}</td>"
+    ra_h = Math.floor(dso.ra_deg / 15.0)
+    ra_m = Math.round((dso.ra_deg - ra_h*15) * 4 * 10) / 10
+    ret += "<td>#{ra_h}h #{ra_m}m</td>"
+    dec_deg = Math.floor(dso.dec_deg)
+    dec_m = Math.round((dso.dec_deg - dec_deg) * 60 * 10) / 10
+    dec_sign = ''
+    dec_sign = '+' if dec_deg >= 0
+    ret += "<td>#{dec_sign}#{dec_deg} #{dec_m}m</td>"
+    size = ''
+    size = "#{dso.size_maj}" if dso.size_maj != null
+    size += "x#{dso.size_min}" if dso.size_min != null
+    ret += "<td>#{size}</td>"
+    mag = ''
+    mag = "#{dso.mag}" if dso.mag != null
+    ret += "<td>#{mag}</td>"
+    name = ''
+    name = "#{dso.name}" if dso.name != null
+    ret += "<td>#{name}</td>"
+    notes = ''
+    notes = "#{dso.description}" if dso.description != null
+    ret += "<td>#{notes}</td>"
+  else
+    ret += "<td>#{dso.name}</td>"
+    ret += "<td>#{obj_types[dso.obj_type_id]}</td>"
+    ra_h = Math.floor(dso.ra_deg / 15.0)
+    ra_m = Math.round((dso.ra_deg - ra_h*15) * 4 * 10) / 10
+    ret += "<td>#{ra_h}h #{ra_m}m</td>"
+    dec_deg = Math.floor(dso.dec_deg)
+    dec_m = Math.round((dso.dec_deg - dec_deg) * 60 * 10) / 10
+    dec_sign = ''
+    dec_sign = '+' if dec_deg >= 0
+    ret += "<td>#{dec_sign}#{dec_deg} #{dec_m}m</td>"
+    size = ''
+    size = "#{dso.size_maj}" if dso.size_maj != null
+    size += "x#{dso.size_min}" if dso.size_min != null
+    ret += "<td>#{size}</td>"
+    mag = ''
+    mag = "#{dso.mag}" if dso.mag != null
+    ret += "<td>#{mag}</td>"
+    ret += "<td></td>"
+    ret += "<td></td>"
+  ret += "</tr>"
+  ret

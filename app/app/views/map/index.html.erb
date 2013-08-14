@@ -3,6 +3,8 @@
     var data_obj = $.parseJSON(<%= raw(@data.to_json) %>);
     var params = $.parseJSON(<%= raw(@params.to_json) %>);
     generate_map(data_obj, '#map_div', params);
+    generate_table(data_obj, '#data_table');
+    $("tr:even td").css("background-color", "#DDD");
     //$("#map_div").html(<%= raw(@data.to_json) %>);
   });
 </script>
@@ -10,3 +12,21 @@
 <div id="map_div">
 
 </div>
+
+<br>
+
+<table id="data_table">
+  <tr>
+    <th>Object</th>
+    <th>Type</th>
+    <th>RA</th>
+    <th>Dec</th>
+    <th>Size</th>
+    <th>Mag</th>
+    <th>Common Name</th>
+    <th>Notes</th>
+  </tr>
+
+  <!-- content goes here -->
+</table>
+
