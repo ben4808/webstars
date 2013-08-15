@@ -55,7 +55,11 @@ window.generate_map = (data_obj, div_id, params) ->
 update_globals = (params) ->
   ra_1 = Math.round((parseInt(params.ra_h_1) + parseInt(params.ra_m_1)/60.0) * 150) / 10
   ra_2 = Math.round((parseInt(params.ra_h_2) + parseInt(params.ra_m_2)/60.0) * 150) / 10
-  center_ra = Math.round((ra_2 + ra_1) / 2.0 * 100) / 100
+  if(ra_1 > ra_2)
+    center_ra = Math.round((ra_2 + ra_1 + 360) / 2.0 * 100) / 100
+    center_ra -= 360 if center_ra > 360
+  else
+    center_ra = Math.round((ra_2 + ra_1) / 2.0 * 100) / 100
   ra_grid = parseInt(params.ra_grid) / 4
 
   dec_1 = parseInt(params.dec_deg_1)
@@ -121,7 +125,12 @@ generate_html = (obj) ->
 
   html.push(generate_ra_line ra_1)
   html.push(generate_ra_line ra_2)
-  html.push(generate_ra_line deg) for deg in [ra_1..ra_2] by ra_grid
+  ra_lines = []
+  if (ra_1 > ra_2)
+    html.push(generate_ra_line deg) for deg in [ra_1...360] by ra_grid
+    html.push(generate_ra_line deg) for deg in [0..ra_2] by ra_grid
+  else
+    html.push(generate_ra_line deg) for deg in [ra_1..ra_2] by ra_grid
 
   html.push(generate_dec_line dec_1)
   html.push(generate_dec_line dec_2)
@@ -188,14 +197,32 @@ generate_dso = (dso) ->
   ret
 
 generate_dec_line = (deg) ->
-  i = ra_1
+  lines = []
   [fx, fy] = get_xy(ra_1, deg)
   [lx, ly] = get_xy(ra_2, deg)
-  lines = while i <= ra_2
-    [x, y] = get_xy(i, deg)
-    i += 1
-    "#{x},#{y}"
-  lines.push "#{lx},#{ly}"
+  if ra_1 > ra_2
+    i = ra_1
+    [ax, ay] = get_xy(center_ra, deg)
+    lines = while i <= 360
+      [x, y] = get_xy(i, deg)
+      i += 1
+      "#{x},#{y}"
+    lines.push "#{ax},#{ay}"
+    i = 0
+    lines2 = while i <= ra_2
+      [x, y] = get_xy(i, deg)
+      i += 1
+      "#{x},#{y}"
+    Array::push.apply lines, lines2
+    lines.push "#{lx},#{ly}"
+
+  else
+    i = ra_1
+    lines = while i <= ra_2
+      [x, y] = get_xy(i, deg)
+      i += 1
+      "#{x},#{y}"
+    lines.push "#{lx},#{ly}"
   all_lines = lines.join(" ")
   "<text class='label' x='#{lx-30}' y='#{ly}'>#{dec_to_label_text(deg)}</text><polyline class='line' points='#{all_lines}' /><text class='label' x='#{fx+5}' y='#{fy}'>#{dec_to_label_text(deg)}</text>"
 
